@@ -20,5 +20,6 @@ app.get("/", function(request, response) {
 
 //Start-up behaviour.
 app.listen(serverPort, function() {
-  console.log("Server started on AWS EC2 instance: " + awsEc2InstanceBaseUrl)
+  console.log("Server started on AWS EC2 instance: " + awsEc2InstanceBaseUrl);
+  console.log("You may access the server locally via: http://localhost:" + serverPort);
 });
