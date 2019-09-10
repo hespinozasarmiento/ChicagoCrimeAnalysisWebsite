@@ -18,6 +18,8 @@ const app = express();
 //Allow the use of javascript static files in project directory (located in /js).
 app.use('/js', express.static(__dirname + '/js'));
 
+app.use('/node_modules', express.static(__dirname + '/node_modules'));
+
 //Configure bodyParser before using.
 app.use(bodyParser.urlencoded({extended:true}));
 
