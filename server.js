@@ -15,11 +15,11 @@ var path = require('path');
 //specifies that this app will be using express.
 const app = express();
 
+//Allow the use of javascript static files in project directory (located in /js).
+app.use('/js', express.static(__dirname + '/js'));
+
 //Configure bodyParser before using.
 app.use(bodyParser.urlencoded({extended:true}));
-
-//Allow the use of javascript static files in project directory.
-app.use('/js', express.static(__dirname + '/js'));
 
 //static AWS EC2 instance server port. Edit with caution.
 const serverPort = 5000;
@@ -34,7 +34,7 @@ app.get("/", function(req, res) {
 });
 
 app.get("/charts", function(req, res) {
-  res.sendFile( path.resolve("html/charts.html"));
+  res.sendFile(path.resolve("html/charts.html"));
 });
 
 app.get("/test-api", function(req, res){
