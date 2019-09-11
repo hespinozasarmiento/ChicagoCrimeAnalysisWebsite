@@ -38,7 +38,7 @@ var myChart = new Chart(ctx, {
         }]
     },
     options: {
-      responsive: true,
+      responsive: false,
       maintainAspectRation: false,
         scales: {
             yAxes: [{
@@ -49,3 +49,7 @@ var myChart = new Chart(ctx, {
         }
     }
 });
+
+var canvas = document.querySelector("#myChart");
+canvas.style.length = "250px";
+canvas.style.width = "350px";
