@@ -7,7 +7,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 //importing the request package
-const request = require('request');
+//const request = require('request');
 
 //importing path for accessing directories in different levels.
 var path = require('path');
@@ -39,16 +39,16 @@ app.get("/charts", function(req, res) {
   res.sendFile(path.resolve("html/charts.html"));
 });
 
-app.get("/test-api", function(req, res){
-  const testApiEndpoint = "https://www.googleapis.com/books/v1/volumes?q=isbn:0747532699";
-
-  //The following few lines documents how to make an API call using javascript
-  request(testApiEndpoint, function(error, response, body){
-    console.log(body);
-    res.sendFile(body);
-  });
-
-});
+// app.get("/test-api", function(req, res){
+//   const testApiEndpoint = "https://www.googleapis.com/books/v1/volumes?q=isbn:0747532699";
+//
+//   //The following few lines documents how to make an API call using javascript
+//   request(testApiEndpoint, function(error, response, body){
+//     console.log(body);
+//     res.sendFile(body);
+//   });
+//
+// });
 
 //Start-up behaviour.
 app.listen(serverPort, function() {

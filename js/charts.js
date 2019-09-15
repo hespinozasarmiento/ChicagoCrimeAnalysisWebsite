@@ -7,8 +7,64 @@ paragraph.addEventListener("click", changeMessage);
 
 function changeMessage() {
   paragraph.textContent = "clicked!";
-  console.log(paragraph.textContent);
+
+  const testApiEndpoint
+    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type, year WHERE year = 2019";
+
+  //API call:
+  console.log("Making request now!");
+  var csvData = makeApiCall(testApiEndpoint);
+
+  //Log the returned data
+  //console.log(csvData);
+  const rows = parseCsvRows(csvData);
+  const columns = parseCsvColumns(csvData);
+
+  //In the columns array, the primary_type = index 0. The year = index 1
+  console.log(rows[0]);
+
+
+  //Figuring out how to map multiple values to a single key in js:
+  var primaryTypesArray = [];
+  var primaryTypesFrequencyCountsArray = [];
+
+  //TODO A HashMap should be written from scratch to handle these kinds of
+  //associations if the processing speed for these methods becomes unacceptable.
+  //Each row's contents are successfully extracted.  We need to parse the row's
+  //key, value pairs and store them into the appropriate array (keeping counts).
+
+  /* Iterate through each row (starting at row 1. Row 0 is not desired,
+   * as it only contains column label names)
+   */
+  for(var i = 1; i < rows.length; i++) {
+
+    var currentRow = rows[i];
+
+    //extract the primary_type value:
+    var primary_type = currentRow.split(',');
+    console.log("row primary_type: " + primary_type);
+  }
+
+} //This function needs heavy refactoring.
+
+function makeApiCall(query) {
+  var xmlHttp = new XMLHttpRequest();
+  xmlHttp.open("GET", query, false); // false for synchronous request
+  xmlHttp.send(null);
+
+  var responseBody = xmlHttp.responseText.toString();
+  return responseBody;
 }
+
+
+function parseCsvColumns(csvDataToParse) {
+  return csvDataToParse.split(',');
+}
+
+function parseCsvRows(csvDataToParse) {
+  return csvDataToParse.split('\n');
+}
+
 
 var ctx = document.getElementById('myChart').getContext('2d');
 var myChart = new Chart(ctx, {
