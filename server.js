@@ -39,17 +39,6 @@ app.get("/charts", function(req, res) {
   res.sendFile(path.resolve("html/charts.html"));
 });
 
-// app.get("/test-api", function(req, res){
-//   const testApiEndpoint = "https://www.googleapis.com/books/v1/volumes?q=isbn:0747532699";
-//
-//   //The following few lines documents how to make an API call using javascript
-//   request(testApiEndpoint, function(error, response, body){
-//     console.log(body);
-//     res.sendFile(body);
-//   });
-//
-// });
-
 //Start-up behaviour.
 app.listen(serverPort, function() {
   console.log("Server started on AWS EC2 instance: " + awsEc2InstanceBaseUrl);

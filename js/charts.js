@@ -1,5 +1,15 @@
 //jshint esversion:6
 
+//TODO:
+
+/*
+- implement HasmMap for enhanced processing speed(?)
+- update the query, apparently, the year does not need to be specified as
+  a query parameter, just in the WHERE clause.  This will return a list of
+  primaryTypes and will dramatically simplify the parsing code.
+- modularize methods that handle the processing of the API data.
+*/
+
 var paragraph = document.querySelector("#paragraph");
 
 //set click event listener
@@ -9,7 +19,7 @@ function changeMessage() {
   paragraph.textContent = "clicked!";
 
   const testApiEndpoint
-    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type, year WHERE year = 2019";
+    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type WHERE year = 2019";
 
   //API call:
   console.log("Making request now!");
@@ -22,7 +32,6 @@ function changeMessage() {
 
   //In the columns array, the primary_type = index 0. The year = index 1
   console.log(rows[0]);
-
 
   //Figuring out how to map multiple values to a single key in js:
   var primaryTypesArray = [];
@@ -38,12 +47,34 @@ function changeMessage() {
    */
   for(var i = 1; i < rows.length; i++) {
 
-    var currentRow = rows[i];
-
     //extract the primary_type value:
-    var primary_type = currentRow.split(',');
-    console.log("row primary_type: " + primary_type);
+    var currentPrimaryType = rows[i];
+
+    //populate arrays
+
+    //first, check the presence of the primaryType in the primaryTypes array
+    if(primaryTypesArray.includes(currentPrimaryType)) {
+       //find the index in which the primaryType is stored in the primaryType array.
+       var indexOfExistingPrimaryType = primaryTypesArray.indexOf(currentPrimaryType);
+
+       //update the count for this primarytype in the counts array
+       primaryTypesFrequencyCountsArray[indexOfExistingPrimaryType]++;
+    } else {
+        //Push the new primaryType into the primarytype array
+        primaryTypesArray.push(currentPrimaryType);
+
+        //Create a new index for tracking count of this new primaryType
+        //in the frequencyCounts array.  Count starts with a count of 1.
+        primaryTypesFrequencyCountsArray.push(1);
+    }
+
   }
+
+  console.log('primaryTypesArray: ' + primaryTypesArray.toString());
+  console.log('primaryTypesFrequencyCountsArray' + primaryTypesFrequencyCountsArray);
+
+  console.log('frequency counts size: ' + primaryTypesFrequencyCountsArray.length);
+  console.log('primarytypes array size: ' + primaryTypesArray.length);
 
 } //This function needs heavy refactoring.
 
