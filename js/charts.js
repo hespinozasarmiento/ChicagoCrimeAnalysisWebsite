@@ -19,28 +19,19 @@ function changeMessage() {
   paragraph.textContent = "clicked!";
 
   const testApiEndpoint
-    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type WHERE year = 2019";
+    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type WHERE year = 2019 LIMIT 50000000000";
 
   //API call:
   console.log("Making request now!");
   var csvData = makeApiCall(testApiEndpoint);
 
-  //Log the returned data
-  //console.log(csvData);
+  //Extract the CSV rows and columns
   const rows = parseCsvRows(csvData);
   const columns = parseCsvColumns(csvData);
-
-  //In the columns array, the primary_type = index 0. The year = index 1
-  console.log(rows[0]);
 
   //Figuring out how to map multiple values to a single key in js:
   var primaryTypesArray = [];
   var primaryTypesFrequencyCountsArray = [];
-
-  //TODO A HashMap should be written from scratch to handle these kinds of
-  //associations if the processing speed for these methods becomes unacceptable.
-  //Each row's contents are successfully extracted.  We need to parse the row's
-  //key, value pairs and store them into the appropriate array (keeping counts).
 
   /* Iterate through each row (starting at row 1. Row 0 is not desired,
    * as it only contains column label names)
@@ -51,7 +42,6 @@ function changeMessage() {
     var currentPrimaryType = rows[i];
 
     //populate arrays
-
     //first, check the presence of the primaryType in the primaryTypes array
     if(primaryTypesArray.includes(currentPrimaryType)) {
        //find the index in which the primaryType is stored in the primaryType array.
@@ -70,14 +60,21 @@ function changeMessage() {
 
   }
 
-  console.log('primaryTypesArray: ' + primaryTypesArray.toString());
-  console.log('primaryTypesFrequencyCountsArray' + primaryTypesFrequencyCountsArray);
-
-  console.log('frequency counts size: ' + primaryTypesFrequencyCountsArray.length);
-  console.log('primarytypes array size: ' + primaryTypesArray.length);
+  //Display the data in a bar graph.
+  displayBarChartGivenDataAndLabels(primaryTypesArray,
+    primaryTypesFrequencyCountsArray, "2019 Crime Frequency");
 
 } //This function needs heavy refactoring.
 
+
+/**
+ * A method for making a GET request on a specified API endpoint.  The endpoint
+ * and necessary parameters are passed in as a single string via the method
+ * parameter.
+ *
+ * @param  string query The full API endpoint to call the GET request on.
+ * @return string       The response from the API call -- JSON, CSV, etc.
+ */
 function makeApiCall(query) {
   var xmlHttp = new XMLHttpRequest();
   xmlHttp.open("GET", query, false); // false for synchronous request
@@ -88,55 +85,70 @@ function makeApiCall(query) {
 }
 
 
+/**
+ * A method for parsing (extracting) all of the columns within a CSV document.
+ * The method will receive a string representation of a CSV document, and parse
+ * by the comma (',') delimiter.  Finally, the method will return an array in
+ * which each individual element corresponds to a single row in the CSV string.
+ *
+ * @param  string csvDataToParse A string containing the CSV data to parse.
+ * @return array                 An array containing all columns of the CSV.
+ */
 function parseCsvColumns(csvDataToParse) {
   return csvDataToParse.split(',');
 }
 
+
+/**
+ * A method for parsing (extracting) all of the rows within a CSV document.
+ * The method will receive a CSV document, and parse by end-of-line character.
+ * This will yield an array in which each index is a single row in the CSV
+ * file.
+ *
+ * @param string csvDataToParse A string containing the CSV data to parse.
+ * @return array                An array containing all rows of the CSV.
+ */
 function parseCsvRows(csvDataToParse) {
   return csvDataToParse.split('\n');
 }
 
 
-var ctx = document.getElementById('myChart').getContext('2d');
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(255, 206, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(255, 159, 64, 0.2)'
-            ],
-            borderColor: [
-                'rgba(255, 99, 132, 1)',
-                'rgba(54, 162, 235, 1)',
-                'rgba(255, 206, 86, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(153, 102, 255, 1)',
-                'rgba(255, 159, 64, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-      responsive: false,
-      maintainAspectRation: false,
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+/**
+ * A method that constructs and displays a bar chart given the x axis data
+ * labels, along with pertinent data for graphing.
+ *
+ * @param  array xAxisLabels  The labels to be listed along the X axis.
+ * @param  array data         The data to be graphed.
+ * @param  string chartName   A desired name for the chart.
+ */
+function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName) {
+  var ctx = document.getElementById('myChart').getContext('2d');
+  var myChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+          labels: xAxisLabels,
+          datasets: [{
+              label: chartName,
+              data: data,
+              backgroundColor: 'rgba(255, 99, 132, 0.2)',
+              borderColor: 'rgba(255, 99, 132, 1)',
+              borderWidth: 0.5
+          }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRation: true,
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
 
-var canvas = document.querySelector("#myChart");
-canvas.style.length = "250px";
-canvas.style.width = "350px";
+  var canvas = document.querySelector("#myChart");
+  canvas.style.length = "400px";
+  canvas.style.width = "1400px";
+}
