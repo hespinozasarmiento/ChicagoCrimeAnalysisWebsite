@@ -16,13 +16,14 @@ var searchButton = document.querySelector("#searchButton");
 //set click event listener
 searchButton.addEventListener("click", renderChart);
 
-var myChart = null;
+var crimeFrequencyByYearChart = null;
+var crimeFrequencyByYearAndWardChart = null;
 
 function renderChart() {
 
   //Isolate the drop-down HTML item.
   var crimesByYearDropDown
-    = document.getElementById("crimes-by-year-chart-drop-down");
+    = document.getElementById("crimes-by-year-drop-down");
 
   //Extract the user-selected year from the drop-down.
   var selectedYear
@@ -137,14 +138,14 @@ function parseCsvRows(csvDataToParse) {
  */
 function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName, year) {
 
-  //If the cart already contains data on it, destroy it.
-  // if(myChart != null) {
-  //   myChart.destroy();
-  // }
+  //If the chart already contains data on it, destroy it.
+  if(crimeFrequencyByYearChart != null) {
+    crimeFrequencyByYearChart.destroy();
+  }
 
   //construct a new Chart object on the canvas.
   var ctx = document.getElementById('crimes-by-year-canvas').getContext('2d');
-  myChart = new Chart(ctx, {
+  crimeFrequencyByYearChart = new Chart(ctx, {
       type: 'bar',
       data: {
           labels: xAxisLabels,
@@ -169,24 +170,19 @@ function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName, year) {
       }
   });
 
-  //TODO : Modifying the chart's dimentions should be controlled via CSS.
-  var canvas = document.querySelector("#crimes-by-year-canvas");
-  canvas.style.length = "400px";
-  canvas.style.width = "1400px";
 }
-
 
 
 function displayBarChartGivenDataAndLabels2(xAxisLabels, data, chartName, year) {
 
-  //If the cart already contains data on it, destroy it.
-  if(myChart != null) {
-    myChart.destroy();
+  //If the chart already contains data on it, destroy it.
+  if(crimeFrequencyByYearAndWardChart != null) {
+    crimeFrequencyByYearAndWardChart.destroy();
   }
 
   //construct a new Chart object on the canvas.
-  var ctx = document.getElementById('crimes-by-year-canvas2').getContext('2d');
-  myChart = new Chart(ctx, {
+  var ctx = document.getElementById('crimes-by-year-and-ward-canvas').getContext('2d');
+  crimeFrequencyByYearAndWardChart = new Chart(ctx, {
       type: 'bar',
       data: {
           labels: xAxisLabels,
@@ -211,8 +207,4 @@ function displayBarChartGivenDataAndLabels2(xAxisLabels, data, chartName, year) 
       }
   });
 
-  //TODO : Modifying the chart's dimentions should be controlled via CSS.
-  var canvas = document.querySelector("#crimes-by-year-canvas2");
-  canvas.style.length = "400px";
-  canvas.style.width = "1400px";
 }
