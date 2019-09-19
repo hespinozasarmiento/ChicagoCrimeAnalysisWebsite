@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 
+<!-- TODO:
+- Use forms when it comes to having the user select stuff. Using them breaks
+functionality for some reason though.
+
+- A bit of repetitive code regarding the year drop-down.  Let's fix this.
+
+-->
+
 <head>
   <meta charset="utf-8">
   <title>Charts</title>
@@ -9,7 +17,7 @@
 <body>
   <section class="charts-section">
     <article>
-      <h2>Crime frequency by Year</h2>
+      <h2>Crime Frequency by Year</h2>
 
       <label>Please select a year to query for:</label>
       <select id="crimes-by-year-drop-down">
@@ -35,43 +43,42 @@
         <option value="2019">2019</option>
       </select>
 
-      <button id="searchButton">SEARCH</button>
+      <button id="crimesByYearButton">SEARCH</button>
       <div>
         <canvas id="crimes-by-year-canvas"></canvas>
       </div>
     </article>
 
     <article>
-      <h2>Crime frequency by year and ward</h2>
-      <form>
-        <label>Please select a year to query for:</label>
-        <select id="crimes-by-year-and-ward-drop-down">
-          <option value=""></option>
-          <option value="2001">2001</option>
-          <option value="2002">2002</option>
-          <option value="2003">2003</option>
-          <option value="2004">2004</option>
-          <option value="2005">2005</option>
-          <option value="2006">2006</option>
-          <option value="2007">2007</option>
-          <option value="2008">2008</option>
-          <option value="2009">2009</option>
-          <option value="2010">2010</option>
-          <option value="2011">2011</option>
-          <option value="2012">2012</option>
-          <option value="2013">2013</option>
-          <option value="2014">2014</option>
-          <option value="2015">2015</option>
-          <option value="2016">2016</option>
-          <option value="2017">2017</option>
-          <option value="2018">2018</option>
-          <option value="2019">2019</option>
-        </select>
-        <label>Please select a ward to filter by: </label>
-        <input type="text" id="wardNumber" name="ward" size="10">
-      </form>
+      <h2>Crime Frequency by Year and Ward</h2>
+
+      <label>Please select a year to query for:</label>
+      <select id="crimesByYearAndWardDropDown">
+        <option value=""></option>
+        <option value="2001">2001</option>
+        <option value="2002">2002</option>
+        <option value="2003">2003</option>
+        <option value="2004">2004</option>
+        <option value="2005">2005</option>
+        <option value="2006">2006</option>
+        <option value="2007">2007</option>
+        <option value="2008">2008</option>
+        <option value="2009">2009</option>
+        <option value="2010">2010</option>
+        <option value="2011">2011</option>
+        <option value="2012">2012</option>
+        <option value="2013">2013</option>
+        <option value="2014">2014</option>
+        <option value="2015">2015</option>
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+      </select>
+      <button id="crimesByYearAndWardButton">SEARCH</button>
+
       <div>
-        <canvas id="crimes-by-year-and-ward-canvas"></canvas>
+        <canvas id="crimesByYearAndWardCanvas"></canvas>
       </div>
     </article>
   </section>

@@ -11,15 +11,19 @@
 - Modifying the chart's dimentions should be controlled via CSS.
 */
 
-var searchButton = document.querySelector("#searchButton");
+const chicagoCrimePortalApiBaseUrl = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv";
 
-//set click event listener
-searchButton.addEventListener("click", renderChart);
+var crimesByYearButton = document.querySelector("#crimesByYearButton");
+var crimesByYearAndWardButton = document.querySelector("#crimesByYearAndWardButton");
 
 var crimeFrequencyByYearChart = null;
 var crimeFrequencyByYearAndWardChart = null;
 
-function renderChart() {
+//set click event listeners
+crimesByYearButton.addEventListener("click", renderCrimesByYearChart);
+crimesByYearAndWardButton.addEventListener("click", renderCrimesByYearAndWardChart);
+
+function renderCrimesByYearChart() {
 
   //Isolate the drop-down HTML item.
   var crimesByYearDropDown
@@ -30,7 +34,10 @@ function renderChart() {
     = crimesByYearDropDown.options[crimesByYearDropDown.selectedIndex].value;
 
   const testApiEndpoint
-    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT primary_type WHERE year = " + selectedYear + " LIMIT 50000000000";
+    = chicagoCrimePortalApiBaseUrl
+      + "?$query=SELECT primary_type WHERE year = "
+      + selectedYear
+      + " LIMIT 50000000000";
 
   //Make the API call:
   var csvData = makeApiCall(testApiEndpoint);
@@ -73,12 +80,56 @@ function renderChart() {
 
   //Display the data in a bar graph.
   displayBarChartGivenDataAndLabels(primaryTypesArray,
-    primaryTypesFrequencyCountsArray, selectedYear + " Crime Frequency", selectedYear);
-
-  displayBarChartGivenDataAndLabels2(primaryTypesArray,
-    primaryTypesFrequencyCountsArray, selectedYear + " Crime Frequency", selectedYear);
+    primaryTypesFrequencyCountsArray, selectedYear + " Crime Frequency");
 
 } //This function needs heavy refactoring.
+
+
+function renderCrimesByYearAndWardChart() {
+  var crimesByYearAndWardDropdown = document.querySelector("#crimesByYearAndWardDropDown");
+
+  var yearSelectedByUser =
+    crimesByYearAndWardDropdown.options[crimesByYearAndWardDropdown.selectedIndex].value;
+
+  console.log("User selected year: " + yearSelectedByUser);
+
+  var apiEndpoint
+    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT ward WHERE year = " + yearSelectedByUser +" LIMIT 50000";
+
+  //Make the API call:
+  var csvData = makeApiCall(apiEndpoint);
+
+  //TODO: find counts of how many crimes occurred in each ward.
+  //wards = x axis, count = y axis for the given year.
+
+  var rows = parseCsvRows(csvData);
+
+  var uniqueWardsAndFrequencies = countUniqueWardsAndCrimeFrequencies(rows);
+  var individualWards = uniqueWardsAndFrequencies[0];
+  var crimeCountsPerWard = uniqueWardsAndFrequencies[1];
+
+  displayCrimesByYearAndWardBarChart(individualWards,
+    crimeCountsPerWard,
+    yearSelectedByUser + " crime counts per ward");
+}
+
+
+function countUniqueWardsAndCrimeFrequencies(allCrimesForyear) {
+  var a = [], b = [], prev;
+  allCrimesForyear.sort();
+
+  for ( var i = 0; i < allCrimesForyear.length; i++ ) {
+      if ( allCrimesForyear[i] !== prev ) {
+          a.push(allCrimesForyear[i]);
+          b.push(1);
+      } else {
+          b[b.length-1]++;
+      }
+      prev = allCrimesForyear[i];
+  }
+
+  return [a, b];
+}
 
 
 /**
@@ -136,7 +187,7 @@ function parseCsvRows(csvDataToParse) {
  * @param  string chartName   A desired name for the chart.
  * @param  string year        The year that the data corresponds to.
  */
-function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName, year) {
+function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName) {
 
   //If the chart already contains data on it, destroy it.
   if(crimeFrequencyByYearChart != null) {
@@ -173,7 +224,7 @@ function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName, year) {
 }
 
 
-function displayBarChartGivenDataAndLabels2(xAxisLabels, data, chartName, year) {
+function displayCrimesByYearAndWardBarChart(xAxisLabels, data, chartName) {
 
   //If the chart already contains data on it, destroy it.
   if(crimeFrequencyByYearAndWardChart != null) {
@@ -181,7 +232,7 @@ function displayBarChartGivenDataAndLabels2(xAxisLabels, data, chartName, year) 
   }
 
   //construct a new Chart object on the canvas.
-  var ctx = document.getElementById('crimes-by-year-and-ward-canvas').getContext('2d');
+  var ctx = document.getElementById('crimesByYearAndWardCanvas').getContext('2d');
   crimeFrequencyByYearAndWardChart = new Chart(ctx, {
       type: 'bar',
       data: {
