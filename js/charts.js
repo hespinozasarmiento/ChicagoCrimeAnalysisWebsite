@@ -9,6 +9,7 @@
   primaryTypes and will dramatically simplify the parsing code.
 - modularize methods that handle the processing of the API data.
 - Modifying the chart's dimentions should be controlled via CSS.
+- the crimesByYearAndWard canvas shows wards on x-axis, but out of order.
 */
 
 const chicagoCrimePortalApiBaseUrl = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv";
