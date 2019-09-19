@@ -1,4 +1,4 @@
-var sendSmsButton = querySelector("#sendSmsButton");
+var sendSmsButton = document.querySelector("#sendSmsButton");
 
 sendSmsButton.addEventListener("click", sendSmsMessage);
 
