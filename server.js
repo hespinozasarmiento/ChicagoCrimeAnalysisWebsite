@@ -6,9 +6,6 @@ const express = require('express');
 //importing bodyParser
 const bodyParser = require('body-parser');
 
-//importing the request package
-//const request = require('request');
-
 //importing path for accessing directories in different levels.
 var path = require('path');
 
@@ -37,6 +34,10 @@ app.get("/", function(req, res) {
 
 app.get("/charts", function(req, res) {
   res.sendFile(path.resolve("html/charts.html"));
+});
+
+app.get("/smsNotifications", function(req, res) {
+  res.sendFile(path.resolve("html/smsNotifications.html"));
 });
 
 //Start-up behaviour.

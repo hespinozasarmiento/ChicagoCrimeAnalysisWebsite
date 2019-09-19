@@ -95,7 +95,7 @@ function renderCrimesByYearAndWardChart() {
   console.log("User selected year: " + yearSelectedByUser);
 
   var apiEndpoint
-    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT ward WHERE year = " + yearSelectedByUser +" LIMIT 50000";
+    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT ward WHERE year = " + yearSelectedByUser +" LIMIT 50000000";
 
   //Make the API call:
   var csvData = makeApiCall(apiEndpoint);
