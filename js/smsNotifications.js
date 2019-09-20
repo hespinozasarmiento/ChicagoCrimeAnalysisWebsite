@@ -1,10 +1,13 @@
 var sendSmsButton = document.querySelector("#sendSmsButton");
+var smsRegistrationForm = document.querySelector("#smsRegistrationForm");
 
-sendSmsButton.addEventListener("click", sendSmsMessage);
+smsRegistrationForm.addEventListener("submit", sendSmsMessage);
 
 function sendSmsMessage() {
   console.log("Making the call!");
-  var response = makeApiCall("http://localhost:5000/sendSms");
+  var phoneNumber = document.querySelector().value;
+  console.log("entered phone number: " + phoneNumber);
+  var response = makeApiCall("http://localhost:5000/sendSms?phoneNumber=" + phoneNumber);
   console.log("returned from making the call!");
 }
 
