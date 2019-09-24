@@ -6,8 +6,8 @@ const express = require('express');
 //importing bodyParser
 const bodyParser = require('body-parser');
 
-//importing the request package
-//const request = require('request');
+//importing twilio
+const twilio = require('twilio');
 
 //importing path for accessing directories in different levels.
 var path = require('path');
@@ -38,6 +38,47 @@ app.get("/", function(req, res) {
 app.get("/charts", function(req, res) {
   res.sendFile(path.resolve("html/charts.html"));
 });
+
+app.get("/smsNotifications", function(req, res) {
+  //if a phone number was provided in the query, process it.
+  if(req.query.phoneNumber) {
+    // Find your account sid and auth token in your Twilio account Console.
+    var client = new twilio('AC2c3ea4c8bab866082211221e9d34ff35', 'fd3c5e3ba5a4e42cfa6b42496727ea66');
+    var phoneNumber = req.query.phoneNumber;
+
+    // Send the text message.
+    client.messages.create({
+     to: phoneNumber,
+     from: '18722527725',
+     body: 'Hello from Twilio! This is an initial text message.'
+    });
+
+    console.log("Text sent");
+    res.send('All done');
+  } else {
+    //No query arguments were passed in; meaning this was not a submit form event.
+    res.sendFile(path.resolve("html/smsNotifications.html"));
+  }
+
+});
+
+
+// app.get("/sendSms", function(req, res) {
+//   // Find your account sid and auth token in your Twilio account Console.
+//   var client = new twilio('AC2c3ea4c8bab866082211221e9d34ff35', 'fd3c5e3ba5a4e42cfa6b42496727ea66');
+//   var phoneNumber = req.query.phoneNumber;
+//
+//   // Send the text message.
+//   client.messages.create({
+//    to: phoneNumber,
+//    from: '18722527725',
+//    body: 'Hello from Twilio! This is an initial text message.'
+//   });
+//
+//   console.log("Text sent");
+//   res.send('All done');
+// });
+
 
 //Start-up behaviour.
 app.listen(serverPort, function() {
