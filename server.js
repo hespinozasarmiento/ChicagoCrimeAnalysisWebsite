@@ -1,30 +1,21 @@
 //jshint esversion:6
 
-//'importing' express.
+//adding all required dependencies
 const express = require('express');
-
-//importing bodyParser
 const bodyParser = require('body-parser');
-
-//importing twilio
 const twilio = require('twilio');
-
-//importing path for accessing directories in different levels.
-var path = require('path');
+const path = require('path');
 
 //specifies that this app will be using express.
 const app = express();
 
-//Allow the use of javascript static files in project directory (located in /js).
+//middleware for processing POST requests a bit easier.
+app.use(bodyParser.urlencoded({extended: false}));
+
+//Allow the use of static files in project directory
 app.use('/js', express.static(__dirname + '/js'));
-
-//Allow the use of CSS static files in project directory (located in /css).
 app.use('/css', express.static(__dirname + '/css'));
-
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
-
-//Configure bodyParser before using.
-app.use(bodyParser.urlencoded({extended:true}));
 
 //static AWS EC2 instance server port. Edit with caution.
 const serverPort = 5000;
@@ -49,6 +40,17 @@ app.get("/charts.html", function(req, res) {
 app.get("/crimeNews.html", function(req, res) {
   res.sendFile(path.resolve("html/crimeNews.html"));
 });
+
+
+app.post('/create_subscriber', (req, res) => {
+  console.log("Trying to create a new user.");
+  console.log("First Name: " + req.body.firstName);
+  console.log("Last Name: " + req.body.lastName);
+  console.log("Ward Number: " + req.body.wardNumber);
+  console.log("Phone Number: " + req.body.phoneNumber);
+  res.end();
+});
+
 
 app.get("/smsNotifications.html", function(req, res) {
   //if a phone number was provided in the query, process it.

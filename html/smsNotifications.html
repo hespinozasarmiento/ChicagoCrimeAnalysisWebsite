@@ -19,10 +19,28 @@
 
   <h1>Sign up for SMS Text Alerts</h1>
 
-  <form id="smsRegistrationForm">
-    Enter your phone number: <input type="text" name="phoneNumber"><br>
-    <input type="submit" value="submit">
-  </form>
+
+  <section id="pageDescription">
+    <p>
+      With a crime rate of 44 per 1000 residents, Chicago has one of
+      highest crime rates in America.  One's chance of becoming a
+      crime victime in Chicago is 1 in 23. Stay up-to-date on daily
+      crimes in your ward by signing up for crime alerts.  Simply register
+      your name, phone number and the ward for which you'd like to receive
+      alerts for.  The Chicago Crime Analysis Website will send you daily
+      updates regarding criminal activities reported in your chosen ward.
+    </p>
+  </section>
+
+  <section id="notificationSignUpSection">
+    <form action="/create_subscriber" method="POST" id="notificationSignUpForm">
+      <input name="firstName" placeholder="First Name" />
+      <input name="lastName" placeholder="Last Name" />
+      <input name="wardNumber" placeholder="Ward Number (1 - 50)" />
+      <input name="phoneNumber" placeholder="Your Phone Number"  />
+      <button id="registrationButton">Register</button>
+    </form>
+  </section>
 
   <script src="js/smsNotifications.js"></script>
 </body>
