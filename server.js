@@ -24,6 +24,69 @@ const serverPort = 5000;
 const awsEc2InstanceBaseUrl
   = "http://ec2-34-219-122-169.us-west-2.compute.amazonaws.com" + ":" + serverPort;
 
+
+//MongoDB Atlass connection details:
+const MongoClient = require('mongodb').MongoClient;
+
+const uri = "mongodb+srv://vismark:vismark1994@schoolprojects-kz6w4.mongodb.net/test?retryWrites=true&w=majority";
+
+
+/**
+ * Connects to MongoDB Atlass, and retrieves the specified collection in the
+ * soecified MongoDB database.
+ *
+ * @param  {[type]} databaseName       [description]
+ * @param  {[type]} databaseCollection [description]
+ * @return {[type]}                    [description]
+ */
+function connectToDatabase(databaseName, databaseCollection) {
+
+  MongoClient.connect(uri, {useNewUrlParser: true}, function(err, client) {
+  	console.log("Attempting connection to MongoDB Atlas.");
+
+  	//specify connection details (database name, and collection name. If they don't exist, they'll be created.)
+  	const mongoDbCollection = client.db(databaseName).collection(databaseCollection);
+  	console.log("Connection attempt successful.");
+    console.log("mongoDbCollection connection: " + mongoDbCollection);
+    return mongoDbCollection;
+  });
+
+  //print before and after it gets returned
+  // console.log("before returning: " + mongoDbCollection);
+  // return mongoDbCollection;
+}
+
+
+function insertNewSubscriberIntoSubscribersCollection(newSubscriber,
+  mongoDbSubscribersCollection) {
+
+    /*
+     * wardNumber is first converted into a string, since this is the format the
+     * wardNumber is stored as in the MongoDB collection.
+     */
+    let subscriberWardNumber = Number(newSubscriber.wardNumber);
+    let documentByWardNumberQuery = {ward: subscriberWardNumber};
+    let pushNewSubscriberToSubscriberListQuery = { $push: {'subscribers': newSubscriber}};
+
+    console.log('inside method for updating: ' + mongoDbSubscribersCollection);
+
+    mongoDbSubscribersCollection.updateOne(documentByWardNumberQuery, pushNewSubscriberToSubscriberListQuery, function(err, res) {
+      if (err) throw err;
+      console.log("Successfully added the following subscriber to ward " + subscriberWardNumber + ": " + JSON.stringify(newSubscriber));
+    });
+}
+
+
+function extractNewSubscriberDetails(newSubscriberReqDetails) {
+  let newSubscriber = {
+    firstName: newSubscriberReqDetails.body.firstName,
+    lastName: newSubscriberReqDetails.body.lastName,
+    wardNumber: newSubscriberReqDetails.body.wardNumber,
+    phoneNumber: newSubscriberReqDetails.body.phoneNumber
+  };
+  return newSubscriber;
+}
+
 //Handle all root requests.
 app.get("/", function(req, res) {
   res.sendFile(path.resolve("index.html"));
@@ -42,14 +105,39 @@ app.get("/crimeNews.html", function(req, res) {
 });
 
 
+
+
 app.post('/create_subscriber', (req, res) => {
-  console.log("Trying to create a new user.");
-  console.log("First Name: " + req.body.firstName);
-  console.log("Last Name: " + req.body.lastName);
-  console.log("Ward Number: " + req.body.wardNumber);
-  console.log("Phone Number: " + req.body.phoneNumber);
-  res.end();
+
+  //Store the request form's new subscriber details into an object (`newSubscriber`).
+  var newSubscriber = extractNewSubscriberDetails(req);
+
+  /**
+   * A connection to the `subscribersCollection` collection -- which is
+   * found within the `chicagoCrimeWebsiteDatabase` database.  This will
+   * be used for inserting the `newSubscriber` into the collection.
+   */
+  //const mongoDbSubscribersCollection = connectToDatabase("chicagoCrimeWebsiteDatabase", "subscribersCollection");
+
+  //should all be moved into function:
+  MongoClient.connect(uri, {useNewUrlParser: true}, function(err, client) {
+    console.log("Attempting connection to MongoDB Atlas.");
+
+    //specify connection details (database name, and collection name. If they don't exist, they'll be created.)
+    const mongoDbSubscribersCollection = client.db("chicagoCrimeWebsiteDatabase").collection("subscribersCollection");
+    console.log("Connection attempt successful.");
+
+    //insert new subscriber into the `subscribersCollection` collection:
+    insertNewSubscriberIntoSubscribersCollection(newSubscriber, mongoDbSubscribersCollection);
+
+    client.close();
+  });
+
+  res.redirect("/");
 });
+
+
+
 
 
 app.get("/smsNotifications.html", function(req, res) {
