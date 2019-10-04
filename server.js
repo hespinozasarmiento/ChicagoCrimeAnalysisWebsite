@@ -16,6 +16,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use('/js', express.static(__dirname + '/js'));
 app.use('/css', express.static(__dirname + '/css'));
 app.use('/node_modules', express.static(__dirname + '/node_modules'));
+app.use('/resources', express.static(__dirname + '/resources'));
 
 //static AWS EC2 instance server port. Edit with caution.
 const serverPort = 5000;
