@@ -4,18 +4,21 @@ ul {
   padding: 0;
   overflow: hidden;
   background-color: #34c6eb;
+  position: fixed; /* Sets the nav bar to a fixed position at the top of the page.*/
+  top: 0; /* Pushes nav bar all the way to the top. */
+  width: 100%; /* Extends width of the nav bar all the way accross the page. */
 }
 
 li {
-  float: left;
+  float: left; /* Align items from left to right. */
 }
 
 li a {
-  display: block;
+  display: block; /* Keeps items on the same row. */
   color: white;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
+  text-align: center; /* Keep the text centered in it's tab. */
+  padding: 14px 16px; /* Give the text some padding to space things out & increase readability.*/
+  text-decoration: none; /* Removes default underlining under the text. */
 }
 
 li a:hover:not(.active) {
@@ -24,6 +27,10 @@ li a:hover:not(.active) {
 
 .active {
   background-color: #4CAF50;
+}
+
+.bodyContent {
+  margin-top: 100px; /*nav bar is fixed.  This property prevents content overlay.*/
 }
 
 /*------------- smsNotifications.html -----------*/
