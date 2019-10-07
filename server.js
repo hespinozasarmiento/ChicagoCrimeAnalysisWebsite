@@ -1,5 +1,14 @@
 //jshint esversion:6
 
+
+/**
+ * TODO:
+ * - Find a way to have the route endpoint paths not have the
+ *   names of the files' extensions.  The endpoint names should
+ *   be descriptive, not merely the names of the files the browser
+ *   renders.
+ */
+
 //adding all required dependencies
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -105,9 +114,6 @@ app.get("/crimeNews.html", function(req, res) {
   res.sendFile(path.resolve("html/crimeNews.html"));
 });
 
-
-
-
 app.post('/create_subscriber', (req, res) => {
 
   //Store the request form's new subscriber details into an object (`newSubscriber`).
@@ -134,12 +140,12 @@ app.post('/create_subscriber', (req, res) => {
     client.close();
   });
 
-  res.redirect("/");
+  res.redirect("/submissionSuccessful");
 });
 
-
-
-
+app.get("/submissionSuccessful", function(req, res) {
+  res.sendFile(path.resolve("html/submissionSuccessful.html"));
+});
 
 app.get("/smsNotifications.html", function(req, res) {
   //if a phone number was provided in the query, process it.

@@ -44,3 +44,9 @@ li a:hover:not(.active) {
   border-radius: 4px;
   box-sizing: border-box;
 }
+
+/*------------- submissionSuccessful.html -----------*/
+
+#returnToHomePageDiv {
+  text-align: center;
+}
