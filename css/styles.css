@@ -1,3 +1,7 @@
+html {
+  background-color: #e3e3d5;
+}
+
 ul {
   list-style-type: none;
   margin: 0;
@@ -35,14 +39,40 @@ li a:hover:not(.active) {
 
 /*------------- smsNotifications.html -----------*/
 
+.pageTitle {
+  text-align: center;
+}
+
+.pageDescription {
+  position: relative;
+  display: block;
+  width: 50%;
+  margin: 0 auto 0 auto;
+  text-align: center;
+}
+
+#notificationSignUpForm {
+  text-align: center;
+}
+
  #notificationSignUpForm input {
-  width: 100%;
+  width: 50%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+#registrationButton {
+  margin: auto;
+  display: block;
+}
+
+.chicagoSkylineSection {
+  padding-top: 30px;
+  text-align: center;
 }
 
 /*------------- submissionSuccessful.html -----------*/
