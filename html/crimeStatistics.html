@@ -21,14 +21,22 @@ functionality for some reason though.
     <ul>
       <li><a href="../index.html">Home</a></li>
       <li><a href="crimeNews.html">Crime News</a></li>
-      <li><a href="charts.html">Crime Statistics</a></li>
+      <li><a href="crimeStatistics.html">Crime Statistics</a></li>
       <li><a href="smsNotifications.html">Sign up for Alerts</a></li>
     </ul>
   </section>
 
   <section class="charts-section">
-    <article>
+    <article class="chart">
       <h2>Crime Frequency by Year</h2>
+
+      <p class="chartDescription">
+        Select a calendar year using the drop-down below (from 2001 - 2019).
+        After selecting a year, click on the 'SEARCH' button to see Chicago
+        crime statistics for the selected year. The particular chart in this
+        section will yield the number of times a particular crime has occurred
+        in the selected year.
+      </p>
 
       <label>Please select a year to query for:</label>
       <select id="crimes-by-year-drop-down">
@@ -60,8 +68,17 @@ functionality for some reason though.
       </div>
     </article>
 
-    <article>
+    <article class="chart">
       <h2>Crime Frequency by Year and Ward</h2>
+
+      <p class="chartDescription">
+        Select a calendar year using the drop-down below (from 2001 - 2019).
+        After selecting a year, click on the 'SEARCH' button to see Chicago
+        crime statistics for the selected year, broken down by ward number.
+
+        "ward": Chicago is broken down into 50 smaller geographic regions.
+        Each one of those geographic regions is called a "ward".
+      </p>
 
       <label>Please select a year to query for:</label>
       <select id="crimesByYearAndWardDropDown">

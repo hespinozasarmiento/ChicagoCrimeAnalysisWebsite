@@ -37,6 +37,19 @@ li a:hover:not(.active) {
   margin-top: 100px; /*nav bar is fixed.  This property prevents content overlay.*/
 }
 
+
+/*------------- crimeStatistics.html -----------*/
+
+.chartDescription {
+  width: 50%;
+  margin: auto;
+  padding-bottom: 20px;
+}
+
+.chart {
+  text-align: center;
+}
+
 /*------------- smsNotifications.html -----------*/
 
 .pageTitle {

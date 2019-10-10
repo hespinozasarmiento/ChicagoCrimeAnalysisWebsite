@@ -106,8 +106,8 @@ app.get("/index.html", function(req, res) {
   res.sendFile(path.resolve("index.html"));
 });
 
-app.get("/charts.html", function(req, res) {
-  res.sendFile(path.resolve("html/charts.html"));
+app.get("/crimeStatistics.html", function(req, res) {
+  res.sendFile(path.resolve("html/crimeStatistics.html"));
 });
 
 app.get("/crimeNews.html", function(req, res) {
