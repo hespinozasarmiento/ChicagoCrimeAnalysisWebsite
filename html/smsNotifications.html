@@ -36,11 +36,15 @@
 
   <section id="notificationSignUpSection">
     <form action="/create_subscriber" method="POST" id="notificationSignUpForm">
-      <input required name="firstName" placeholder="First Name" />
-      <input required name="lastName" placeholder="Last Name" />
-      <input required type="number" name="wardNumber" placeholder="Ward Number (1 - 50)" min="1" max="50" />
-      <input required name="phoneNumber" placeholder="Your Phone Number" minlength="10" maxlength="10"/>
-      <button id="registrationButton">Register</button>
+      <input class="textInput" required name="firstName" placeholder="First Name" />
+      <input class="textInput" required name="lastName" placeholder="Last Name" />
+      <input class="textInput" required type="number" name="wardNumber" placeholder="Ward Number (1 - 50)" min="1" max="50" />
+      <input class="textInput" required name="phoneNumber" placeholder="Your Phone Number" minlength="10" maxlength="10"/>
+      <div id="unsubscribeOptions">
+        <input type="checkbox" id="unsubscribeCheckbox" name="unsubscribe">
+        <label id="unsubscribeLabel" for="unsubscribe">Unsubscribe</label>
+      </div>
+      <button id="registrationButton">Submit</button>
     </form>
   </section>
 
