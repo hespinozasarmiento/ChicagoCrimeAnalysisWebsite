@@ -86,6 +86,19 @@ function insertNewSubscriberIntoSubscribersCollection(newSubscriber,
     });
 }
 
+function removeSubscriberFromSubscribersCollection(subscriberDetails, mongoDbSubscribersCollection) {
+  let documentByWardNumberQuery = {ward: Number(subscriberDetails.wardNumber)};
+  let removeSubscriberFromSubscriberListQuery = { $pull: {'subscribers': subscriberDetails}};
+
+  mongoDbSubscribersCollection.updateOne(documentByWardNumberQuery, removeSubscriberFromSubscriberListQuery, function(err, res) {
+    if (err) //Catch error -- if any.
+      throw err; // throw error.
+
+    console.log("Deleted the following subscriber: " + JSON.stringify(subscriberDetails));
+  });
+
+}
+
 
 function extractNewSubscriberDetails(newSubscriberReqDetails) {
   let newSubscriber = {
@@ -117,7 +130,10 @@ app.get("/crimeNews.html", function(req, res) {
 app.post('/create_subscriber', (req, res) => {
 
   //Store the request form's new subscriber details into an object (`newSubscriber`).
-  var newSubscriber = extractNewSubscriberDetails(req);
+  var subscriberDetails = extractNewSubscriberDetails(req);
+  var userRequestedDeletion = req.body.unsubscribe;
+  console.log("userRequestedDeletion: " + userRequestedDeletion);
+
 
   /**
    * A connection to the `subscribersCollection` collection -- which is
@@ -134,11 +150,17 @@ app.post('/create_subscriber', (req, res) => {
     const mongoDbSubscribersCollection = client.db("chicagoCrimeWebsiteDatabase").collection("subscribersCollection");
     console.log("Connection attempt successful.");
 
-    //insert new subscriber into the `subscribersCollection` collection:
-    insertNewSubscriberIntoSubscribersCollection(newSubscriber, mongoDbSubscribersCollection);
+    if(userRequestedDeletion) {
+      //Delete the document that matches the provided user
+      removeSubscriberFromSubscribersCollection(subscriberDetails, mongoDbSubscribersCollection);
+    } else {
+      //insert new subscriber into the `subscribersCollection` collection:
+      insertNewSubscriberIntoSubscribersCollection(subscriberDetails, mongoDbSubscribersCollection);
+    }
 
     client.close();
   });
+
 
   res.redirect("/submissionSuccessful");
 });
