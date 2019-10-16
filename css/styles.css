@@ -94,13 +94,16 @@ input #unsubscribeCheckbox {
   display: block;
 }
 
-.chicagoSkylineSection {
+.chicagoSkylineClipArt{
   padding-top: 30px;
   text-align: center;
 }
 
-/*------------- submissionSuccessful.html -----------*/
+/*------------- subscriberAddedSuccessfully.html -----------*/
 
 #returnToHomePageDiv {
   text-align: center;
 }
+
+
+/*------------- subscriberDeletedSuccessfully.html -----------*/

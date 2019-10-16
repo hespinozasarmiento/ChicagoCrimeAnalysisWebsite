@@ -127,13 +127,11 @@ app.get("/crimeNews.html", function(req, res) {
   res.sendFile(path.resolve("html/crimeNews.html"));
 });
 
-app.post('/create_subscriber', (req, res) => {
+app.post('/update_subscription_collection', (req, res) => {
 
   //Store the request form's new subscriber details into an object (`newSubscriber`).
   var subscriberDetails = extractNewSubscriberDetails(req);
   var userRequestedDeletion = req.body.unsubscribe;
-  console.log("userRequestedDeletion: " + userRequestedDeletion);
-
 
   /**
    * A connection to the `subscribersCollection` collection -- which is
@@ -153,20 +151,24 @@ app.post('/create_subscriber', (req, res) => {
     if(userRequestedDeletion) {
       //Delete the document that matches the provided user
       removeSubscriberFromSubscribersCollection(subscriberDetails, mongoDbSubscribersCollection);
+      res.redirect("/userSuccessfullyRemoved");
     } else {
       //insert new subscriber into the `subscribersCollection` collection:
       insertNewSubscriberIntoSubscribersCollection(subscriberDetails, mongoDbSubscribersCollection);
+      res.redirect("/userSuccessfullySubscribed");
     }
 
     client.close();
   });
 
-
-  res.redirect("/submissionSuccessful");
 });
 
-app.get("/submissionSuccessful", function(req, res) {
-  res.sendFile(path.resolve("html/submissionSuccessful.html"));
+app.get("/userSuccessfullySubscribed", function(req, res) {
+  res.sendFile(path.resolve("html/subscriberAddedSuccessfully.html"));
+});
+
+app.get("/userSuccessfullyRemoved", function(req, res) {
+  res.sendFile(path.resolve("html/subscriberRemovedSuccessfully.html"));
 });
 
 app.get("/smsNotifications.html", function(req, res) {
