@@ -50,6 +50,12 @@ li a:hover:not(.active) {
   text-align: center;
 }
 
+.chartCanvasDiv {
+  margin: auto;
+  height: 50%;
+  width: 70%;
+}
+
 /*------------- smsNotifications.html -----------*/
 
 .pageTitle {

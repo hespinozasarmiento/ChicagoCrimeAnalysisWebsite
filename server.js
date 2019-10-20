@@ -1,6 +1,5 @@
 //jshint esversion:6
 
-
 /**
  * TODO:
  * - Find a way to have the route endpoint paths not have the
