@@ -32,18 +32,15 @@ crimeTrendsByYearButton.addEventListener("click", renderCrimeTrendsByYearChart);
 function renderCrimesByYearChart() {
 
   //Isolate the drop-down HTML item.
-  var crimesByYearDropDown
-    = document.getElementById("crimes-by-year-drop-down");
+  var crimesByYearDropDown = document.getElementById("crimes-by-year-drop-down");
 
   //Extract the user-selected year from the drop-down.
-  var selectedYear
-    = crimesByYearDropDown.options[crimesByYearDropDown.selectedIndex].value;
+  var selectedYear = crimesByYearDropDown.options[crimesByYearDropDown.selectedIndex].value;
 
-  const testApiEndpoint
-    = chicagoCrimePortalApiBaseUrl
-      + "?$query=SELECT primary_type WHERE year = "
-      + selectedYear
-      + " LIMIT 50000000000";
+  const testApiEndpoint = chicagoCrimePortalApiBaseUrl +
+    "?$query=SELECT primary_type WHERE year = " +
+    selectedYear +
+    " LIMIT 50000000000";
 
   //Make the API call:
   var csvData = makeApiCall(testApiEndpoint);
@@ -59,27 +56,26 @@ function renderCrimesByYearChart() {
   /* Iterate through each row (starting at row 1. Row 0 is not desired,
    * as it only contains column label names)
    */
-  for(var i = 1; i < rows.length; i++) {
+  for (var i = 1; i < rows.length; i++) {
 
     //extract the primary_type value:
     var currentPrimaryType = rows[i];
 
     //populate arrays
     //first, check the presence of the primaryType in the primaryTypes array
-    if(primaryTypesArray.includes(currentPrimaryType)) {
-       //find the index in which the primaryType is stored in the primaryType array.
-       var indexOfExistingPrimaryType
-        = primaryTypesArray.indexOf(currentPrimaryType);
+    if (primaryTypesArray.includes(currentPrimaryType)) {
+      //find the index in which the primaryType is stored in the primaryType array.
+      var indexOfExistingPrimaryType = primaryTypesArray.indexOf(currentPrimaryType);
 
-       //update the count for this primarytype in the counts array
-       primaryTypesFrequencyCountsArray[indexOfExistingPrimaryType]++;
+      //update the count for this primarytype in the counts array
+      primaryTypesFrequencyCountsArray[indexOfExistingPrimaryType]++;
     } else {
-        //Push the new primaryType into the primarytype array
-        primaryTypesArray.push(currentPrimaryType);
+      //Push the new primaryType into the primarytype array
+      primaryTypesArray.push(currentPrimaryType);
 
-        //Create a new index for tracking count of this new primaryType
-        //in the frequencyCounts array.  Count starts with a count of 1.
-        primaryTypesFrequencyCountsArray.push(1);
+      //Create a new index for tracking count of this new primaryType
+      //in the frequencyCounts array.  Count starts with a count of 1.
+      primaryTypesFrequencyCountsArray.push(1);
     }
 
   }
@@ -99,8 +95,7 @@ function renderCrimesByYearAndWardChart() {
 
   console.log("User selected year: " + yearSelectedByUser);
 
-  var apiEndpoint
-    = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT ward WHERE year = " + yearSelectedByUser +" LIMIT 50000000";
+  var apiEndpoint = "https://data.cityofchicago.org/resource/ijzp-q8t2.csv?$query=SELECT ward WHERE year = " + yearSelectedByUser + " LIMIT 50000000";
 
   //Make the API call:
   var csvData = makeApiCall(apiEndpoint);
@@ -121,17 +116,19 @@ function renderCrimesByYearAndWardChart() {
 
 
 function countUniqueWardsAndCrimeFrequencies(allCrimesForyear) {
-  var a = [], b = [], prev;
+  var a = [],
+    b = [],
+    prev;
   allCrimesForyear.sort();
 
-  for ( var i = 0; i < allCrimesForyear.length; i++ ) {
-      if ( allCrimesForyear[i] !== prev ) {
-          a.push(allCrimesForyear[i]);
-          b.push(1);
-      } else {
-          b[b.length-1]++;
-      }
-      prev = allCrimesForyear[i];
+  for (var i = 0; i < allCrimesForyear.length; i++) {
+    if (allCrimesForyear[i] !== prev) {
+      a.push(allCrimesForyear[i]);
+      b.push(1);
+    } else {
+      b[b.length - 1]++;
+    }
+    prev = allCrimesForyear[i];
   }
 
   return [a, b];
@@ -200,35 +197,35 @@ function parseCsvRows(csvDataToParse) {
 function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName) {
 
   //If the chart already contains data on it, destroy it.
-  if(crimeFrequencyByYearChart != null) {
+  if (crimeFrequencyByYearChart != null) {
     crimeFrequencyByYearChart.destroy();
   }
 
   //construct a new Chart object on the canvas.
   var ctx = document.getElementById('crimes-by-year-canvas').getContext('2d');
   crimeFrequencyByYearChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: xAxisLabels,
-          datasets: [{
-              label: chartName,
-              data: data,
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 0.5
-          }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRation: true,
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
+    type: 'bar',
+    data: {
+      labels: xAxisLabels,
+      datasets: [{
+        label: chartName,
+        data: data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 0.5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRation: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
           }
+        }]
       }
+    }
   });
 
 }
@@ -237,77 +234,93 @@ function displayBarChartGivenDataAndLabels(xAxisLabels, data, chartName) {
 function displayCrimesByYearAndWardBarChart(xAxisLabels, data, chartName) {
 
   //If the chart already contains data on it, destroy it.
-  if(crimeFrequencyByYearAndWardChart != null) {
+  if (crimeFrequencyByYearAndWardChart != null) {
     crimeFrequencyByYearAndWardChart.destroy();
   }
 
   //construct a new Chart object on the canvas.
   var ctx = document.getElementById('crimesByYearAndWardCanvas').getContext('2d');
   crimeFrequencyByYearAndWardChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-          labels: xAxisLabels,
-          datasets: [{
-              label: chartName,
-              data: data,
-              backgroundColor: 'rgba(255, 99, 132, 0.2)',
-              borderColor: 'rgba(255, 99, 132, 1)',
-              borderWidth: 0.5
-          }]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRation: true,
-          scales: {
-              yAxes: [{
-                  ticks: {
-                      beginAtZero: true
-                  }
-              }]
+    type: 'bar',
+    data: {
+      labels: xAxisLabels,
+      datasets: [{
+        label: chartName,
+        data: data,
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 0.5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRation: true,
+      scales: {
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
           }
+        }]
       }
+    }
   });
 
 }
 
+function randomColorGenerator() {
+  var color1 = Math.floor(Math.random() * 255) + 1;
+  var color2 = Math.floor(Math.random() * 255) + 1;
+  var color3 = Math.floor(Math.random() * 255) + 1;
+  return "rgb(" + color1 + "," + color2 + "," + color3 + ")";
+}
+
 function displayCrimeTrendsByYearChart() {
-  new Chart(document.getElementById("crimeTrendsByYearCanvas"), {
-  type: 'line',
-  data: {
-    labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
-    datasets: [{
-        data: [86,114,106,106,107,111,133,221,783,2478],
-        label: "Africa",
-        borderColor: "#3e95cd",
-        fill: false
-      }, {
-        data: [282,350,411,502,635,809,947,1402,3700,5267],
-        label: "Asia",
-        borderColor: "#8e5ea2",
-        fill: false
-      }, {
-        data: [168,170,178,190,203,276,408,547,675,734],
-        label: "Europe",
-        borderColor: "#3cba9f",
-        fill: false
-      }, {
-        data: [40,20,10,16,24,38,74,167,508,784],
-        label: "Latin America",
-        borderColor: "#e8c3b9",
-        fill: false
-      }, {
-        data: [6,3,2,2,7,26,82,172,312,433],
-        label: "North America",
-        borderColor: "#c45850",
-        fill: false
+
+  var allDatasets = []; //will hold all datasets
+  var allLabels = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]; //will hold all of the labels on the x axis (years)
+
+  var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, 70, 80, 90, 30]
+  var crimeLabel0 = "someCrime0";
+
+  var crimeFrequencies1 = [0, 40, 60, 70, 80, 90, 100, 110, 120, 20]
+  var crimeLabel1 = "someCrime1";
+
+  var dataset0 = {
+    data: crimeFrequencies0,
+    label: crimeLabel0,
+    borderColor: randomColorGenerator(),
+    fill: false
+  };
+
+  var dataset1 = {
+    data: crimeFrequencies1,
+    label: crimeLabel1,
+    borderColor: randomColorGenerator(),
+    fill: false
+  };
+
+  //store all of te datasets
+  allDatasets.push(dataset0);
+
+  allDatasets.push(dataset1);
+
+  console.log("all datasets: " + allDatasets.toString());
+  console.log("all labels: " + allLabels.toString());
+
+  var ctx = document.getElementById("crimeTrendsByYearCanvas");
+  crimeTrendsByYearChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: allDatasets
+    },
+    options: {
+      title: {
+        display: true,
+        text: 'Chicago Crime Trends per Crime'
       }
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'World population per region (in millions)'
     }
-  }
-});
+
+  });
+
 }
