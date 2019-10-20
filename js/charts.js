@@ -16,13 +16,18 @@ const chicagoCrimePortalApiBaseUrl = "https://data.cityofchicago.org/resource/ij
 
 var crimesByYearButton = document.querySelector("#crimesByYearButton");
 var crimesByYearAndWardButton = document.querySelector("#crimesByYearAndWardButton");
+var crimeTrendsByYearButton = document.querySelector("#crimeTrendsByYearButton");
 
+//Initiating objects to hold charts data (these will be instantiated later)
 var crimeFrequencyByYearChart = null;
 var crimeFrequencyByYearAndWardChart = null;
+var crimeTrendsByYearChart = null;
+
 
 //set click event listeners
 crimesByYearButton.addEventListener("click", renderCrimesByYearChart);
 crimesByYearAndWardButton.addEventListener("click", renderCrimesByYearAndWardChart);
+crimeTrendsByYearButton.addEventListener("click", renderCrimeTrendsByYearChart);
 
 function renderCrimesByYearChart() {
 
@@ -130,6 +135,10 @@ function countUniqueWardsAndCrimeFrequencies(allCrimesForyear) {
   }
 
   return [a, b];
+}
+
+function renderCrimeTrendsByYearChart() {
+  displayCrimeTrendsByYearChart();
 }
 
 
@@ -259,4 +268,33 @@ function displayCrimesByYearAndWardBarChart(xAxisLabels, data, chartName) {
       }
   });
 
+}
+
+function displayCrimeTrendsByYearChart() {
+  var ctx = document.getElementById('crimeTrendsByYearCanvas').getContext('2d');
+  crimeTrendsByYearChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      datasets: [{
+        label: 'My First dataset',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        backgroundColor: 'rgba(255, 99, 132, 1)',
+        fill: false,
+        data: [1, 2, 3, 4, 5, 6, 7],
+        yAxisID: 'y-axis-1',
+      }]
+    },
+      options: {
+        responsive: true,
+        maintainAspectRation: true,
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
 }
