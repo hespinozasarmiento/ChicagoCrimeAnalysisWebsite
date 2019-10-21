@@ -274,15 +274,28 @@ function randomColorGenerator() {
   return "rgb(" + color1 + "," + color2 + "," + color3 + ")";
 }
 
+function fetchAnnualCrimeCounts() {
+
+  //TODO There has to be a better way of populating this array.
+  var years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2016, 2017, 2018, 2019];
+
+  for(var i = 0; i < years.length; i++) {
+    var annualCrimeFrequenciesQuery = "https://data.cityofchicago.org/resource/6zsd-86xi.json?$select=primary_type,COUNT(primary_type)&$group=primary_type&year=" + years[i];
+    var jsonResponse = makeApiCall(annualCrimeFrequenciesQuery);
+    console.log(JSON.parse(jsonResponse));
+  }
+
+}
+
 function displayCrimeTrendsByYearChart() {
 
   var allDatasets = []; //will hold all datasets
   var allLabels = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]; //will hold all of the labels on the x axis (years)
 
-  var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, 70, 80, 90, 30]
+  var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, null, 80, 90, 30];
   var crimeLabel0 = "someCrime0";
 
-  var crimeFrequencies1 = [0, 40, 60, 70, 80, 90, 100, 110, 120, 20]
+  var crimeFrequencies1 = [0, 40, 60, 70, 80, null, 100, 110, 120, 20];
   var crimeLabel1 = "someCrime1";
 
   var dataset0 = {
@@ -322,5 +335,7 @@ function displayCrimeTrendsByYearChart() {
     }
 
   });
+
+  fetchAnnualCrimeCounts();
 
 }
