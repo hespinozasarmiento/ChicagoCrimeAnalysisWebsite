@@ -279,10 +279,15 @@ function fetchAnnualCrimeCounts() {
   //TODO There has to be a better way of populating this array.
   var years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2016, 2017, 2018, 2019];
 
-  for(var i = 0; i < years.length; i++) {
+  for (var i = 0; i < years.length; i++) {
     var annualCrimeFrequenciesQuery = "https://data.cityofchicago.org/resource/6zsd-86xi.json?$select=primary_type,COUNT(primary_type)&$group=primary_type&year=" + years[i];
-    var jsonResponse = makeApiCall(annualCrimeFrequenciesQuery);
-    console.log(JSON.parse(jsonResponse));
+
+    //jsonResponse will hold all of the crimes committed in the year, and their respective counts.
+    var responseString = makeApiCall(annualCrimeFrequenciesQuery);
+    var responseJson = JSON.parse(responseString);
+    console.log(responseJson);
+    console.log("is this the primary_type?: " + responseJson[0].primary_type + " " +  responseJson[0].COUNT_primary_type);
+
   }
 
 }
@@ -336,6 +341,8 @@ function displayCrimeTrendsByYearChart() {
 
   });
 
-  fetchAnnualCrimeCounts();
+  var labelForFirstDataset = crimeTrendsByYearChart.data.datasets[0].label;
+  console.log("The label for the very first dataset: " + labelForFirstDataset);
+  //fetchAnnualCrimeCounts();
 
 }
