@@ -274,28 +274,13 @@ function randomColorGenerator() {
   return "rgb(" + color1 + "," + color2 + "," + color3 + ")";
 }
 
+
 function fetchAnnualCrimeCounts() {
 
   //TODO There has to be a better way of populating this array.
   var years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2016, 2017, 2018, 2019];
 
-  for (var i = 0; i < years.length; i++) {
-    var annualCrimeFrequenciesQuery = "https://data.cityofchicago.org/resource/6zsd-86xi.json?$select=primary_type,COUNT(primary_type)&$group=primary_type&year=" + years[i];
-
-    //jsonResponse will hold all of the crimes committed in the year, and their respective counts.
-    var responseString = makeApiCall(annualCrimeFrequenciesQuery);
-    var responseJson = JSON.parse(responseString);
-    console.log(responseJson);
-    console.log("is this the primary_type?: " + responseJson[0].primary_type + " " +  responseJson[0].COUNT_primary_type);
-
-  }
-
-}
-
-function displayCrimeTrendsByYearChart() {
-
   var allDatasets = []; //will hold all datasets
-  var allLabels = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]; //will hold all of the labels on the x axis (years)
 
   var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, null, 80, 90, 30];
   var crimeLabel0 = "someCrime0";
@@ -322,7 +307,40 @@ function displayCrimeTrendsByYearChart() {
 
   allDatasets.push(dataset1);
 
-  console.log("all datasets: " + allDatasets.toString());
+  let numberOfYears = years.length;
+  for (var i = 0; i < years.length; i++) {
+    var annualCrimeFrequenciesQuery = "https://data.cityofchicago.org/resource/6zsd-86xi.json?$select=primary_type,COUNT(primary_type)&$group=primary_type&year=" + years[i];
+    console.log("Number of years we'll be fetching for: " + numberOfYears);
+    /*
+    We'll fetch the data for each year.  We'll iterate through the response,
+    but we'll keep a year index counter to keep track of what year we are
+    currently populating for.  This is necessary because there may be years
+    for which no stats exist for a particular crime. When this is the case,
+    we'll simply add 'null' as the count for that particular crime in that
+    particular year.
+     */
+    var responseString = makeApiCall(annualCrimeFrequenciesQuery);
+    var responseJson = JSON.parse(responseString);
+
+    //todo make sure this runs, and then make sure data is accessible when returning. then start parsing.
+
+    // console.log(responseJson);
+    // console.log("is this the primary_type?: " + responseJson[0].primary_type + " " +  responseJson[0].COUNT_primary_type);
+  }
+
+  return allDatasets;
+}
+
+function displayCrimeTrendsByYearChart() {
+
+  var allLabels = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]; //will hold all of the labels on the x axis (years)
+
+  //Store a list of all of the datasets (a dataset is simply an object containing the name of the crime and the crime frequency counts).
+  //Having this list as a variable will make it very easy to store new data points for each individual crime.
+  //let allDatasetsList = crimeTrendsByYearChart.data.datasets;
+
+  let allDatasets = fetchAnnualCrimeCounts();
+
   console.log("all labels: " + allLabels.toString());
 
   var ctx = document.getElementById("crimeTrendsByYearCanvas");
@@ -340,9 +358,5 @@ function displayCrimeTrendsByYearChart() {
     }
 
   });
-
-  var labelForFirstDataset = crimeTrendsByYearChart.data.datasets[0].label;
-  console.log("The label for the very first dataset: " + labelForFirstDataset);
-  //fetchAnnualCrimeCounts();
 
 }
