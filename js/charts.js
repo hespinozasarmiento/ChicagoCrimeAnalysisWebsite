@@ -280,20 +280,10 @@ function fetchAnnualCrimeCounts() {
   //TODO There has to be a better way of populating this array.
   var years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2016, 2017, 2018, 2019];
 
-  var allDatasets = []; //will hold all datasets
-
-  var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, null, 80, 90, 30];
-  var crimeLabel0 = "someCrime0";
+  var allDatasets = []; //will hold all datasets.  There will exist one dataset for each primary_type crime.
 
   var crimeFrequencies1 = [0, 40, 60, 70, 80, null, 100, 110, 120, 20];
   var crimeLabel1 = "someCrime1";
-
-  var dataset0 = {
-    data: crimeFrequencies0,
-    label: crimeLabel0,
-    borderColor: randomColorGenerator(),
-    fill: false
-  };
 
   var dataset1 = {
     data: crimeFrequencies1,
@@ -302,10 +292,24 @@ function fetchAnnualCrimeCounts() {
     fill: false
   };
 
+  allDatasets.push(dataset1);
+
+
+
+
+
+  var crimeFrequencies0 = [0, 20, 30, 40, 50, 60, null, 80, 90, 30];
+  var crimeLabel0 = "someCrime0";
+
+  var dataset0 = {
+    data: crimeFrequencies0,
+    label: crimeLabel0,
+    borderColor: randomColorGenerator(),
+    fill: false
+  };
+
   //store all of te datasets
   allDatasets.push(dataset0);
-
-  allDatasets.push(dataset1);
 
   let numberOfYears = years.length;
   for (var i = 0; i < years.length; i++) {
@@ -319,12 +323,41 @@ function fetchAnnualCrimeCounts() {
     we'll simply add 'null' as the count for that particular crime in that
     particular year.
      */
-    var responseString = makeApiCall(annualCrimeFrequenciesQuery);
-    var responseJson = JSON.parse(responseString);
+    var allCrimesAndFrequenciesForYear = makeApiCall(annualCrimeFrequenciesQuery);
+    var allCrimesAndFrequenciesForYearJsonResponse = JSON.parse(allCrimesAndFrequenciesForYear);
 
-    //todo make sure this runs, and then make sure data is accessible when returning. then start parsing.
+    /*
+      We'll need to keep track of the current year index.  We will iterate through
+      every single primary_type value. every primary_type value should be a dataset object.
 
-    // console.log(responseJson);
+      For each dataset in the allDatasets list, if there is no existing dataset with a
+      label name that matches the current primary_type, then ceate a new dataset
+      object with the following attributes:
+
+      var newDataset = {
+        data: crimeFrequencies (should take into account the current year index).
+        To make matters easier, this array should be initialized with a size of 20.
+        label: primary_type,
+        borderColor: randomColorGenerator(),
+        fill: false
+      };
+
+      and then added into the list of allDatasets.
+
+      If a dataset with the same label name as the current primary_type already exists,
+      then the crime count for that particular year should be added
+    */
+
+    let sizeOfReturnedList = allCrimesAndFrequenciesForYearJsonResponse.length;
+
+    for(i = 0; i < sizeOfReturnedList; i++) {
+      let currentcrimeAndFrequencyJsonObject = allCrimesAndFrequenciesForYearJsonResponse[i];
+      console.log("primary_type is: " + currentcrimeAndFrequencyJsonObject.primary_type);
+      console.log("crime frequency count is: " + currentcrimeAndFrequencyJsonObject.COUNT_primary_type);
+    }
+
+    console.log(allCrimesAndFrequenciesForYearJsonResponse);
+
     // console.log("is this the primary_type?: " + responseJson[0].primary_type + " " +  responseJson[0].COUNT_primary_type);
   }
 
@@ -333,7 +366,11 @@ function fetchAnnualCrimeCounts() {
 
 function displayCrimeTrendsByYearChart() {
 
-  var allLabels = [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009]; //will hold all of the labels on the x axis (years)
+  //will hold all of the labels on the x axis (years)
+  var allLabels = [2000, 2001, 2002, 2003, 2004, 2005,
+                   2006, 2007, 2008, 2009, 2010, 2011,
+                   2012, 2013, 2014, 2015, 2016, 2017,
+                   2018, 2019];
 
   //Store a list of all of the datasets (a dataset is simply an object containing the name of the crime and the crime frequency counts).
   //Having this list as a variable will make it very easy to store new data points for each individual crime.
