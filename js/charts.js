@@ -275,12 +275,46 @@ function randomColorGenerator() {
 }
 
 
+
+
+
+
+
+
+//TODO Need to implement this functionality.
+function addCrimeCountToAppropriateDataset(crimeName, allDatasets, allCrimeCategories, currentYearIndex) {
+
+  if(datasetForCrimeAlreadyExistsInChart(crimeName, )) {
+    /*
+    add the COUNT_primary_type to the dataset's
+    `data` variable.
+     */
+
+
+  } else {
+    /*
+    If an entry for this particular crime does NOT exist, create a new dataset
+    object, as shown below:
+
+    var newDataset = {
+      data: crimeFrequencies (should take into account the current year index).
+      To make matters easier, this array should be initialized with a size of 20.
+      label: primary_type,
+      borderColor: randomColorGenerator(),
+      fill: false
+    };
+     */
+}
+
+
+
 function fetchAnnualCrimeCounts() {
 
   //TODO There has to be a better way of populating this array.
   var years = [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2016, 2017, 2018, 2019];
 
   var allDatasets = []; //will hold all datasets.  There will exist one dataset for each primary_type crime.
+  var allCrimeCategories = []; //Will hold all of the unique crime categories -- this will help with quickly finding the index of the appropriate dataset in allDatasets
 
   var crimeFrequencies1 = [0, 40, 60, 70, 80, null, 100, 110, 120, 20];
   var crimeLabel1 = "someCrime1";
@@ -293,8 +327,6 @@ function fetchAnnualCrimeCounts() {
   };
 
   allDatasets.push(dataset1);
-
-
 
 
 
@@ -357,6 +389,30 @@ function fetchAnnualCrimeCounts() {
 
     for(var j = 0; j < numberOfUniqueCrimeTypesForYear; j++) {
       let currentCrimeAndFrequencyJsonObject = allCrimesAndFrequenciesForYearJsonResponse[j];
+
+      /*
+      For each unique crime, first check the line graph to see if a dataset for This
+      particular crime already exists. If so, add the COUNT_primary_type to the dataset's
+      `data` variable.
+
+      If an entry for this particular crime does NOT exist, create a new dataset
+      object, as shown below:
+
+      var newDataset = {
+        data: crimeFrequencies (should take into account the current year index).
+        To make matters easier, this array should be initialized with a size of 20.
+        label: primary_type,
+        borderColor: randomColorGenerator(),
+        fill: false
+      };
+
+       */
+       let crimeName = currentCrimeAndFrequencyJsonObject.primary_type;
+
+       allDatasets = addCrimeCountToAppropriateDataset(crimeName, allDatasets, allCrimeCategories, currentYearIndex);
+
+      }
+
       // console.log("primary_type is: " + currentCrimeAndFrequencyJsonObject.primary_type);
       // console.log("crime frequency count is: " + currentCrimeAndFrequencyJsonObject.COUNT_primary_type);
     }
@@ -365,6 +421,7 @@ function fetchAnnualCrimeCounts() {
 
   return allDatasets;
 }
+
 
 function displayCrimeTrendsByYearChart() {
 
