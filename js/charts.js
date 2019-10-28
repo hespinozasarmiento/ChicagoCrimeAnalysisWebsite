@@ -312,9 +312,11 @@ function fetchAnnualCrimeCounts() {
   allDatasets.push(dataset0);
 
   let numberOfYears = years.length;
+  console.log("Number of years we'll be fetching for: " + numberOfYears);
+
   for (var i = 0; i < years.length; i++) {
     var annualCrimeFrequenciesQuery = "https://data.cityofchicago.org/resource/6zsd-86xi.json?$select=primary_type,COUNT(primary_type)&$group=primary_type&year=" + years[i];
-    console.log("Number of years we'll be fetching for: " + numberOfYears);
+    var currentYearIndex = i;
     /*
     We'll fetch the data for each year.  We'll iterate through the response,
     but we'll keep a year index counter to keep track of what year we are
@@ -323,6 +325,7 @@ function fetchAnnualCrimeCounts() {
     we'll simply add 'null' as the count for that particular crime in that
     particular year.
      */
+    console.log("Fetching for year: " + years[i]);
     var allCrimesAndFrequenciesForYear = makeApiCall(annualCrimeFrequenciesQuery);
     var allCrimesAndFrequenciesForYearJsonResponse = JSON.parse(allCrimesAndFrequenciesForYear);
 
@@ -348,17 +351,16 @@ function fetchAnnualCrimeCounts() {
       then the crime count for that particular year should be added
     */
 
-    let sizeOfReturnedList = allCrimesAndFrequenciesForYearJsonResponse.length;
+    //store the number of crimes (primary_type) that were returned for this particular year.
+    let numberOfUniqueCrimeTypesForYear = allCrimesAndFrequenciesForYearJsonResponse.length;
+    console.log("Number of different crime types (primary_type) that occurred in this year: " + numberOfUniqueCrimeTypesForYear);
 
-    for(i = 0; i < sizeOfReturnedList; i++) {
-      let currentcrimeAndFrequencyJsonObject = allCrimesAndFrequenciesForYearJsonResponse[i];
-      console.log("primary_type is: " + currentcrimeAndFrequencyJsonObject.primary_type);
-      console.log("crime frequency count is: " + currentcrimeAndFrequencyJsonObject.COUNT_primary_type);
+    for(var j = 0; j < numberOfUniqueCrimeTypesForYear; j++) {
+      let currentCrimeAndFrequencyJsonObject = allCrimesAndFrequenciesForYearJsonResponse[j];
+      // console.log("primary_type is: " + currentCrimeAndFrequencyJsonObject.primary_type);
+      // console.log("crime frequency count is: " + currentCrimeAndFrequencyJsonObject.COUNT_primary_type);
     }
 
-    console.log(allCrimesAndFrequenciesForYearJsonResponse);
-
-    // console.log("is this the primary_type?: " + responseJson[0].primary_type + " " +  responseJson[0].COUNT_primary_type);
   }
 
   return allDatasets;
